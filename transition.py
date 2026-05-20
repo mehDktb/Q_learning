@@ -2,12 +2,13 @@ from unittest import case
 import random
 import numpy as np
 
-def select_action(current_state, Q_table, epsilon, rows, cols):
+def select_action(current_state, Q_table, epsilon, states):
+    rows, cols = states
     row, col = current_state
 
     state_flatten = row * cols + col
 
-    valid_actions = get_valid_actions(current_state, rows, cols)
+    valid_actions = get_valid_actions(current_state, states)
 
     # ε-greedy decision
     if random.uniform(0, 1) < epsilon:
@@ -30,7 +31,8 @@ def select_action(current_state, Q_table, epsilon, rows, cols):
     return action
 
 
-def get_valid_actions(current_state, rows, cols):
+def get_valid_actions(current_state, states):
+    rows, cols = states
     row, col = current_state
 
     valid_actions = []
@@ -55,7 +57,8 @@ def get_valid_actions(current_state, rows, cols):
 
 
 
-def apply_transition(current_state, action, map, score, rewards):
+def apply_transition(current_state, action, grid_map, states, score, rewards):
+    rows, cols = states
     row, col = current_state
     new_row, new_col = row, col
     match action:
@@ -68,18 +71,33 @@ def apply_transition(current_state, action, map, score, rewards):
         case 3:
             new_row, new_col = row, col - 1
 
-    if new_row < 0 or new_row >= len(map) or new_col < 0 or new_col >= len(map[0]):
+    if new_row < 0 or new_row >= rows or new_col < 0 or new_col >= cols:
         return current_state, score, 0  # invalid move → no change
 
     current_state = [new_row, new_col]
 
-    rewards = rewards[(map[new_row][new_col])]
-    score += rewards
-    return current_state, score, rewards
+    reward = rewards[(grid_map[new_row][new_col])]
+    score += reward
+    return current_state, score, reward
 
 
+def get_best_path(Q_table, grid_map, start, goal, states, rewards):
+    state = start
+    path = [state]
+    rows, cols = states
+    score = 0
+    for _ in range(50):
+        row, col = state
 
+        action = select_action(state, Q_table, epsilon=0, states=states)
 
+        state, score, _ = apply_transition(current_state=state, action=action, grid_map=grid_map, states=states, score=score, rewards=rewards)
+        path.append(state)
+
+        if state == goal:
+            break
+
+    return path
 
 
 
