@@ -2,13 +2,12 @@ from unittest import case
 import random
 import numpy as np
 
-def select_action(current_state, Q_table, epsilon, map):
+def select_action(current_state, Q_table, epsilon, rows, cols):
     row, col = current_state
-    cols = len(map[0])
 
     state_flatten = row * cols + col
 
-    valid_actions = get_valid_actions(current_state, map)
+    valid_actions = get_valid_actions(current_state, rows, cols)
 
     # ε-greedy decision
     if random.uniform(0, 1) < epsilon:
@@ -31,9 +30,8 @@ def select_action(current_state, Q_table, epsilon, map):
     return action
 
 
-def get_valid_actions(current_state, map):
+def get_valid_actions(current_state, rows, cols):
     row, col = current_state
-    rows, cols = len(map), len(map[0])
 
     valid_actions = []
 
@@ -57,7 +55,7 @@ def get_valid_actions(current_state, map):
 
 
 
-def apply_transotion(current_state, action, map, score, costs):
+def apply_transotion(current_state, action, map, score, rewards):
     row, col = current_state
     new_row, new_col = row, col
     match action:
@@ -75,9 +73,9 @@ def apply_transotion(current_state, action, map, score, costs):
 
     current_state = [new_row, new_col]
 
-    cost = costs[(map[new_row][new_col])]
-    score += cost
-    return current_state, score, 1
+    rewards = rewards[(map[new_row][new_col])]
+    score += rewards
+    return current_state, score, rewards
 
 
 
