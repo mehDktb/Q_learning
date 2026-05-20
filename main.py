@@ -31,8 +31,9 @@ rows, cols = states
 while current_state != goal:
     previous_state = current_state
     action = select_action(current_state=current_state, epsilon=epsilon, Q_table=Q_table, rows=rows, cols=cols)
-    current_state, score, reward = apply_transotion(current_state=current_state, action=action, map=map, rewards=rewards, score=score)
+    current_state, score, reward = apply_transition(current_state=current_state, action=action, map=map, rewards=rewards, score=score)
     Q_table = update_Q_table(
+
         Q_table=Q_table,
         previous_state=previous_state,
         current_state=current_state,
@@ -45,5 +46,5 @@ while current_state != goal:
     )
     round += 1
 
-#TODO update Q_table
+
 

@@ -55,7 +55,7 @@ def get_valid_actions(current_state, rows, cols):
 
 
 
-def apply_transotion(current_state, action, map, score, rewards):
+def apply_transition(current_state, action, map, score, rewards):
     row, col = current_state
     new_row, new_col = row, col
     match action:
