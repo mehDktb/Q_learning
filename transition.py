@@ -2,6 +2,8 @@ from unittest import case
 import random
 import numpy as np
 
+
+
 def select_action(current_state, Q_table, epsilon, states):
     rows, cols = states
     row, col = current_state
@@ -57,7 +59,7 @@ def get_valid_actions(current_state, states):
 
 
 
-def apply_transition(current_state, action, grid_map, states, score, rewards):
+def apply_transition(current_state, action, grid_map, states, score, rewards, loop_penalty):
     rows, cols = states
     row, col = current_state
     new_row, new_col = row, col
@@ -75,24 +77,23 @@ def apply_transition(current_state, action, grid_map, states, score, rewards):
         return current_state, score, 0  # invalid move → no change
 
     current_state = [new_row, new_col]
-
     reward = rewards[(grid_map[new_row][new_col])]
     score += reward
     return current_state, score, reward
 
 
-def get_best_path(Q_table, grid_map, start, goal, states, rewards):
+def get_best_path(Q_table, grid_map, start, goal, states, rewards, loop_penalty, visited_tuple):
     state = start
-    path = [state]
+    path = [state.copy()]
     rows, cols = states
     score = 0
     for _ in range(50):
         row, col = state
-
+        visited_tuple.add(tuple(state))
         action = select_action(state, Q_table, epsilon=0, states=states)
 
-        state, score, _ = apply_transition(current_state=state, action=action, grid_map=grid_map, states=states, score=score, rewards=rewards)
-        path.append(state)
+        state, score, _ = apply_transition(current_state=state, action=action, grid_map=grid_map, states=states, score=score, rewards=rewards, loop_penalty=loop_penalty)
+        path.append(state.copy())
 
         if state == goal:
             break
