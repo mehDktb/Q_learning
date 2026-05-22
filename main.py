@@ -7,6 +7,9 @@ import numpy as np
 import random
 
 
+#seed
+np.random.seed(42)
+random.seed(42)
 
 #configuration
 states = [20,20]
@@ -32,7 +35,7 @@ else:
     start = [0, 0]
 
 goal = [rows-1, cols-1]
-loop_penalty = 10
+loop_penalty = 30
 
 Q_table = np.zeros(((states[0]*states[1]),(len(actions))))
 grid_map = map_builder(states=states, goal=goal, wall_percentage=walls_percentage)

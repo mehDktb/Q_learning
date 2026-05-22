@@ -1,7 +1,6 @@
 import random
 
-
-
+random.seed(42)
 
 def select_action(current_state, Q_table, epsilon, states):
     rows, cols = states

@@ -1,6 +1,9 @@
 import numpy as np
 import random
 
+np.random.seed(42)
+random.seed(42)
+
 def map_builder(states, goal, wall_percentage):
     rows, cols = states
     num_walls = rows * cols * wall_percentage

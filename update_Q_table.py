@@ -1,5 +1,8 @@
 import numpy as np
 
+np.random.seed(42)
+
+
 def update_Q_table(previous_state, current_state, Q_table, action, reward, learning_rate, discount_factor, states):
     rows, cols = states
     previous_row, previous_col = previous_state
