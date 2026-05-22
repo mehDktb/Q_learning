@@ -10,7 +10,9 @@ import random
 #configuration
 states = [40,40]
 actions = [0,1,2,3] #0->up 1->right 2->down 3->left
-epsilon = 0.5
+epsilon = 1.0
+epsilon_min = 0.05
+decay_rate = 0.995
 learning_rate = 0.4
 discount_factor = 0.9
 episodes = 50000
@@ -63,6 +65,7 @@ for episode in range(episodes):
             learning_rate=learning_rate,
             discount_factor=discount_factor
         )
+    epsilon = max(epsilon_min, epsilon * decay_rate)
 
 visited_tuple = set()
 print(Q_table)
@@ -72,7 +75,6 @@ draw_grid(grid_map, path, start, goal)
 
 
 
-#TODO fixing ping ponging.
 #TODO implementing epsilon decay.
 #TODO implementing random start.
 #TODO implementing walls.
