@@ -69,7 +69,7 @@ for episode in range(episodes):
 
 visited_tuple = set()
 print(Q_table)
-path = get_best_path(Q_table=Q_table, grid_map=grid_map, states=states, rewards=rewards, start=start, goal=goal, loop_penalty=loop_penalty, visited_tuple=visited_tuple)
+path = get_best_path(Q_table=Q_table, grid_map=grid_map, states=states, rewards=rewards, start=start, goal=goal, loop_penalty=loop_penalty, visited_tuple=visited_tuple, max_steps=max_steps)
 print(path)
 draw_grid(grid_map, path, start, goal)
 
