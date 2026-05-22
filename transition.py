@@ -1,6 +1,5 @@
-from unittest import case
 import random
-import numpy as np
+
 
 
 
@@ -85,10 +84,10 @@ def apply_transition(current_state, action, grid_map, states, score, rewards, lo
 def get_best_path(Q_table, grid_map, start, goal, states, rewards, loop_penalty, visited_tuple,max_steps):
     state = start
     path = [state.copy()]
-    rows, cols = states
+
     score = 0
     for _ in range(max_steps):
-        row, col = state
+
         visited_tuple.add(tuple(state))
         action = select_action(state, Q_table, epsilon=0, states=states)
 
