@@ -74,6 +74,8 @@ def apply_transition(current_state, action, grid_map, states, score, rewards, lo
 
     if new_row < 0 or new_row >= rows or new_col < 0 or new_col >= cols:
         return current_state, score, 0  # invalid move → no change
+    if grid_map[new_row][new_col] == 5:
+        return current_state, score, 0
 
     current_state = [new_row, new_col]
     reward = rewards[(grid_map[new_row][new_col])]

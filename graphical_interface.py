@@ -2,60 +2,85 @@ import tkinter as tk
 
 CELL_SIZE = 60
 
-def draw_grid(grid_map, path, start, goal):
-    rows = len(grid_map)
-    cols = len(grid_map[0])
+class GridViewer:
+    def __init__(self, grid_map, path, start, goal):
+        self.grid_map = grid_map
+        self.path = path
+        self.start = start
+        self.goal = goal
 
-    root = tk.Tk()
-    root.title("Q-Learning Grid")
+        self.zoom = 1.0
 
-    canvas = tk.Canvas(root, width=cols*CELL_SIZE, height=rows*CELL_SIZE)
-    canvas.pack()
+        self.rows = len(grid_map)
+        self.cols = len(grid_map[0])
 
-    colors = {
-        0: "white",   # road
-        1: "green",   # jungle
-        2: "blue",    # swamp
-        3: "gray",    # mountain
-        4: "yellow",  # desert
-        5: "gold",    # goal
-    }
+        self.root = tk.Tk()
+        self.root.title("RL Grid Viewer")
 
-    for r in range(rows):
-        for c in range(cols):
-            x1 = c * CELL_SIZE
-            y1 = r * CELL_SIZE
-            x2 = x1 + CELL_SIZE
-            y2 = y1 + CELL_SIZE
+        # scrollable canvas
+        self.canvas = tk.Canvas(self.root, bg="white")
+        self.canvas.pack(fill="both", expand=True)
 
-            cell_value = int(grid_map[r][c])  # ✅ fix
+        self.canvas.bind("<MouseWheel>", self.zoom_canvas)
 
-            canvas.create_rectangle(
-                x1, y1, x2, y2,
-                fill=colors.get(cell_value, "black"),  # ✅ safe fallback
-                outline="black"
-            )
+        self.draw()
 
-    # draw path
-    for (r, c) in path:
-        x = c * CELL_SIZE + CELL_SIZE//2
-        y = r * CELL_SIZE + CELL_SIZE//2
-        canvas.create_oval(x-5, y-5, x+5, y+5, fill="red")
+        self.root.mainloop()
 
-    # start
-    canvas.create_text(
-        start[1]*CELL_SIZE+30,
-        start[0]*CELL_SIZE+30,
-        text="S",
-        font=("Arial", 16, "bold")
-    )
+    def zoom_canvas(self, event):
+        if event.delta > 0:
+            self.zoom *= 1.1
+        else:
+            self.zoom *= 0.9
 
-    # goal
-    canvas.create_text(
-        goal[1]*CELL_SIZE+30,
-        goal[0]*CELL_SIZE+30,
-        text="G",
-        font=("Arial", 16, "bold")
-    )
+        self.canvas.delete("all")
+        self.draw()
 
-    root.mainloop()
+    def draw(self):
+        colors = {
+            0: "white",
+            1: "green",
+            2: "blue",
+            3: "gray",
+            4: "yellow",
+            5: "black",
+            6: "gold",
+        }
+
+        size = int(CELL_SIZE * self.zoom)
+
+        for r in range(self.rows):
+            for c in range(self.cols):
+
+                x1 = c * size
+                y1 = r * size
+                x2 = x1 + size
+                y2 = y1 + size
+
+                val = int(self.grid_map[r][c])
+
+                self.canvas.create_rectangle(
+                    x1, y1, x2, y2,
+                    fill=colors.get(val, "pink"),
+                    outline="black"
+                )
+
+        # path
+        for (r, c) in self.path:
+            x = c * size + size // 2
+            y = r * size + size // 2
+            self.canvas.create_oval(x-3, y-3, x+3, y+3, fill="red")
+
+        # start
+        self.canvas.create_text(
+            self.start[1]*size + size//2,
+            self.start[0]*size + size//2,
+            text="S"
+        )
+
+        # goal
+        self.canvas.create_text(
+            self.goal[1]*size + size//2,
+            self.goal[0]*size + size//2,
+            text="G"
+        )
