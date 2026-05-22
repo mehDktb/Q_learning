@@ -8,20 +8,26 @@ import random
 
 
 #configuration
-states = [20,20]
+states = [40,40]
 actions = [0,1,2,3] #0->up 1->right 2->down 3->left
 epsilon = 0.5
 learning_rate = 0.4
 discount_factor = 0.9
 episodes = 50000
-max_steps = 100
+max_steps = 200
+random_start = True
 
 #map
 # road=0, joungle=1, swamp=2, mountain=3, desert=4
 rewards = [-1, -3, -8, -5, -6, 1000]
-start = [0,0]
-goal = [19,19]
-loop_penalty = 2
+rows, cols = states
+if random_start:
+    start = [random.randint(0, rows-1), random.randint(0, cols-1)]
+else:
+    start = [0, 0]
+
+goal = [rows-1, cols-1]
+loop_penalty = 10
 
 Q_table = np.zeros(((states[0]*states[1]),(len(actions))))
 grid_map = map_builder(states)
